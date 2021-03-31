@@ -1,8 +1,8 @@
 const jwt = require('jsonwebtoken')
 
 
-function createToken(email){
-    return jwt.sign({email}, "THIS IS JWT")
+function createToken(email, role){
+    return jwt.sign({email, role}, "THIS IS JWT")
 }
 
 module.exports = createToken

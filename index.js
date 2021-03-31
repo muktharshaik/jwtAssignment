@@ -1,6 +1,5 @@
 const express = require('express')
 const dotEnv = require('dotenv');
-const jwt = require('jsonwebtoken')
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')

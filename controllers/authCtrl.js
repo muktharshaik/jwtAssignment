@@ -31,8 +31,6 @@ let userSignUp = (req,res)=>{
                     role: role
                 })
                 .then(()=>{
-                    const token = createToken(email);
-                    res.cookie("TOKEN", token, {httpOnly: true})
                     res.json({
                         message: "USER CREATED"
                     })
@@ -49,40 +47,39 @@ let userSignUp = (req,res)=>{
 }
 
 let userSignIn = (req,res)=>{
-
-    //Verify Token
-    var token = req.headers.cookie.split('=')[1]
-    const resu = verifyToken(token)
-
     
     let {
         email,
         password
     } = req.body
 
-    if(resu.email === email){
-        res.json({
-            message: "ENTERED THROUGH TOKEN"
-        })
-    }else{
-        User.findOne({email})
-        .then(data=>{
-            if(password === data.password){
-                res.json({
-                    message: "CORRECT"
-                })
-            }else{
-                res.json({
-                    message: "WRONG PASSWORD"
-                })
-            }
-        })
-        .catch((err)=>{
+    
+    User.findOne({email})
+    .then(data=>{
+        if(password === data.password){
+
+            //created Token
+            var userID = data.email
+            var role = data.role
+            const token = createToken(userID, role);
+            res.cookie("TOKEN", token, {httpOnly: true})
+
+
             res.json({
-                message: "user Not Found"
+                message: "LOGGED IN"
             })
+        }else{
+            res.json({
+                message: "WRONG PASSWORD"
+            })
+        }
+    })
+    .catch((err)=>{
+        res.json({
+            message: "user Not Found"
         })
-    }
+    })
+    
 }
 
 module.exports = {
